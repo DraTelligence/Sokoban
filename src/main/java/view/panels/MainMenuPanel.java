@@ -1,6 +1,5 @@
 package view.panels;
 
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.ActionListener;
@@ -10,7 +9,6 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -85,26 +83,5 @@ public class MainMenuPanel extends JPanel {
         for (var button : buttons) {
             button.addActionListener(listener);
         }
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Sokoban Main Menu");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(555, 785);
-        frame.setLocationRelativeTo(null);
-
-        CardLayout cardLayout = new CardLayout();
-        JPanel cardPanel = new JPanel(cardLayout);
-        JPanel secondJPanel = new JPanel();
-        secondJPanel.setBounds(0, 0, 555, 785);
-        secondJPanel.setBackground(Color.RED);
-
-        MainMenuPanel mainMenuPanel = new MainMenuPanel();
-        cardPanel.add(mainMenuPanel, "MainMenu");
-        cardPanel.add(secondJPanel, "SecondPanel");
-        cardLayout.show(cardPanel, "SecondPanel");
-
-        frame.add(cardPanel);
-        frame.setVisible(true);
     }
 }

@@ -64,15 +64,20 @@ public class Player extends JLabel {
     private String getUrl() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("data\\icons\\Player\\").append(this.currDirec).append("_").append(this.state).append(".png");
+        sb.append("icons\\Player\\").append(this.currDirec).append("_").append(this.state).append(".png");
 
         return sb.toString();
     }
 
     private void setCorrespondingIcon() {
-        ImageIcon icon = new ImageIcon(getUrl());
-        icon.setImage(icon.getImage().getScaledInstance(SIZE, SIZE, Image.SCALE_DEFAULT));
-        this.setIcon(icon);
+        java.net.URL imgURL = getClass().getClassLoader().getResource(getUrl());
+        if (imgURL != null) {
+            ImageIcon icon = new ImageIcon(imgURL);
+            icon.setImage(icon.getImage().getScaledInstance(SIZE, SIZE, Image.SCALE_DEFAULT));
+            this.setIcon(icon);
+        } else {
+            System.err.println("Couldn't find file: " + getUrl());
+        }
     }
 
     @SuppressWarnings("unused")

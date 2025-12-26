@@ -36,9 +36,9 @@ class Save implements Serializable {
         protected StageInfo(int stageID, String author) {
             this.stageID = stageID;
             this.stageCompleted = false;
-            this.stageCompleted=false;
-            this.minSteps=Integer.MAX_VALUE;
-            this.minTime=Integer.MAX_VALUE;
+            this.stageCompleted = false;
+            this.minSteps = Integer.MAX_VALUE;
+            this.minTime = Integer.MAX_VALUE;
         }
 
         protected StageInfo(int stageID, boolean stageCompleted, String author, int minSteps, int minTime) {
@@ -54,6 +54,16 @@ class Save implements Serializable {
             this.minSteps = Math.min(this.minSteps, minSteps);
             this.minTime = Math.min(this.minTime, minTime);
         }
+
+        @Override
+        public String toString() {
+            StringBuilder sb=new StringBuilder();
+            sb.append(stageID).append("   ");
+            sb.append(stageCompleted).append("   ");
+            sb.append(minSteps).append("   ");
+            sb.append(minTime).append("   \n");
+            return sb.toString();
+        }
     }
 
     @Serial
@@ -63,7 +73,7 @@ class Save implements Serializable {
     private Map currMap;
 
     public Save() {
-        this.totStages=5;
+        this.totStages = 5;
 
         for (int i = 0; i < totStages; i++) {
             stageList.add(new StageInfo(i, false, "thereIsAStudio", Integer.MAX_VALUE, Integer.MAX_VALUE));
@@ -77,7 +87,17 @@ class Save implements Serializable {
     void setCurrMap(Map currMap) {
         this.currMap = currMap;
     }
-    
+
+    public String getStageInfo(){
+        String str="";
+        
+        for(var info: stageList){
+            str+=(info.toString());
+        }
+
+        return str;
+    }
+
     void updateStageInfo(int stageID, int minSteps, int minTime) {
         stageList.get(stageID).updateStageInfo(minSteps, minTime);
     }

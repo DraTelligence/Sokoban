@@ -40,7 +40,23 @@ public class UserSystemController {
      * @return
      */
     public String getUserName() {
-        return "";
+        if(model.checkLoggedIn()){
+            return model.getCurrentUser();
+        }else{
+            return null;
+        }
+    }
+
+    public String getStageInfo(){
+        if(model.checkLoggedIn()){
+            return model.getStageInfo();
+        }else{
+            return "";
+        }
+    }
+
+    public void setStageInfo(int stageID, int steps, int time){
+        model.updateStageInfo(stageID, steps, time);
     }
 
     /**
@@ -49,6 +65,7 @@ public class UserSystemController {
      */
     public void init() {
         if (model.checkLoggedIn()) {
+            view.updatePanel();
             view.switchPanel("profile");
         }else{
             view.switchPanel("logIn");

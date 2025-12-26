@@ -1,7 +1,6 @@
 package model.game;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,6 +56,11 @@ public class Map implements Serializable {
         readMapFromFile(levelNum);
     }
 
+    @Override
+    public Map clone(){
+        return new Map(this.getMapComponentsMatrix(),this.getPlayerPosX(),this.getPlayerPosY());
+    }
+
     /**
      * This method return a {@code Map} read from data file
      * 
@@ -64,12 +68,14 @@ public class Map implements Serializable {
      * @return
      */
     private void readMapFromFile(int levelNum) {
-        String dir = "data\\maps\\";
-        String fileName = "level" + levelNum;
         int width, height;
 
         try {
-            InputStream inp = new FileInputStream(dir + fileName);
+            InputStream inp = getClass().getClassLoader().getResourceAsStream("maps/level" + levelNum);
+            if (inp == null) {
+                throw new FileNotFoundException("Map file not found: level" + levelNum);
+            }
+
             // read the size of the map
             try (Scanner sc = new Scanner(inp)) {
                 // read the size of the map
@@ -314,7 +320,7 @@ public class Map implements Serializable {
             int width = currMap.getWidth();
             MapComponents[][] newMap = new MapComponents[height][width];
             for (int i = 0; i < height; i++) {
-                System.arraycopy(currMap.getMapComponentsMatrix()[i], 0, newMap[i], 0, width);
+                newMap[i] = currMap.getMapComponentsMatrix()[i].clone();
             }
 
             // push the crate
@@ -344,7 +350,7 @@ public class Map implements Serializable {
     public void doMove(Direction direction) {
         if (checkMove(this, direction)) {
             hintReady = false;
-            this.record.push(this);
+            this.record.push(this.clone());
             Map newMap = doMove(this, direction);
 
             this.map = newMap.getMapComponentsMatrix();
@@ -352,6 +358,10 @@ public class Map implements Serializable {
             this.posY = newMap.getPlayerPosY();
 
             GameController.getInstance().updateView(direction, "move");
+
+            if (checkVictory(this)) {
+                GameController.getInstance().showVictory();
+            }
         } else {
             GameController.getInstance().updateView(direction, "fail");
         }
@@ -426,8 +436,17 @@ public class Map implements Serializable {
     }
 
     static public Direction getNextStep(Map preMap, Map postMap) {
-        int dx=postMap.getPlayerPosX()-preMap.getPlayerPosX();int dy=postMap.getPlayerPosY()-preMap.getPlayerPosY();
+        int dx = postMap.getPlayerPosX() - preMap.getPlayerPosX();
+        int dy = postMap.getPlayerPosY() - preMap.getPlayerPosY();
 
-        return switch(dx){case-1->Direction.LEFT;case 1->Direction.RIGHT;default->switch(dy){case-1->Direction.UP;case 1->Direction.DOWN;default->null;};};
+        return switch (dx) {
+            case -1 -> Direction.LEFT;
+            case 1 -> Direction.RIGHT;
+            default -> switch (dy) {
+                case -1 -> Direction.UP;
+                case 1 -> Direction.DOWN;
+                default -> null;
+            };
+        };
     }
 }

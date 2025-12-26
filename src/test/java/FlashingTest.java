@@ -24,14 +24,16 @@ public class FlashingTest {
         JPanel panel = new JPanel(new BorderLayout());
 
         // 创建带图片的 JLabel
-        ImageIcon icon1 = new ImageIcon("src/main/java/icons/Crates/crates1/crate.png"); // 替换为你的图片路径
-        ImageIcon icon2 = new ImageIcon("src/main/java/icons/Crates/crates1/crate_onTarget.png");
-
+        ClassLoader classLoader = FlashingTest.class.getClassLoader();
+        ImageIcon icon1 = new ImageIcon(classLoader.getResource("icons/Crates/crates1/crate.png"));
+        ImageIcon icon2 = new ImageIcon(classLoader.getResource("icons/Crates/crates1/crate_onTarget.png"));
+        
         JLabel label = new JLabel(icon1) {
             @Override
             protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
                 Graphics2D g2d = (Graphics2D) g.create();
+                g2d.drawImage(icon1.getImage(), 0, 0, getWidth(), getHeight(), this);
+                
                 g2d.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, alpha));
                 g2d.drawImage(icon2.getImage(), 0, 0, getWidth(), getHeight(), this);
                 g2d.dispose();

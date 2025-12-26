@@ -25,7 +25,7 @@ public class StaticMapComponent extends JLabel {
     private String getUrl() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("data\\icons\\");
+        sb.append("icons\\");
         switch (mapComponent) {
             case BOX, SPACE -> sb.append("Ground\\ground").append(firstFolderNum).append("\\ground.png");
             case BOX_ON_TARGET, TARGET ->
@@ -43,8 +43,13 @@ public class StaticMapComponent extends JLabel {
     }
 
     private void setIcon() {
-        ImageIcon icon = new ImageIcon(getUrl());
-        icon.setImage(icon.getImage().getScaledInstance(SIZE, SIZE, Image.SCALE_DEFAULT));
-        this.setIcon(icon);
+        java.net.URL imgURL = getClass().getClassLoader().getResource(getUrl());
+        if (imgURL != null) {
+            ImageIcon icon = new ImageIcon(imgURL);
+            icon.setImage(icon.getImage().getScaledInstance(SIZE, SIZE, Image.SCALE_DEFAULT));
+            this.setIcon(icon);
+        } else {
+            System.err.println("Couldn't find file: " + getUrl());
+        }
     }
 }

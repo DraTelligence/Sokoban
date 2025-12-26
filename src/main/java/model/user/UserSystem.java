@@ -166,7 +166,15 @@ public class UserSystem {
      * @return the id of the current user. If in guest mode, return -1
      */
     public String getCurrentUser() {
-        return this.currentUser.toString();
+        return this.currentUser.getUserName();
+    }
+
+    public String getStageInfo(){
+        return currentUser.getSave().getStageInfo();
+    }
+
+    public void updateStageInfo(int stageID, int steps, int time){
+        this.currentUser.updateSaveStageCompleted(stageID, steps, time);
     }
 
     /**

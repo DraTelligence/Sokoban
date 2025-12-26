@@ -3,7 +3,9 @@ package controller;
 import java.awt.CardLayout;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
+import scala.collection.MapFactory;
 import view.MainFrame;
 import view.app.ClosingDialog;
 
@@ -48,25 +50,34 @@ public class AppController {
         }
     }
 
+    public void initGame(int levelNum){
+        gameController.initGame(levelNum);
+    }
+
     public void switchToMapFactory(){
         layout.show(cardPanel, "mapFactory");
+        SwingUtilities.invokeLater(MapFactoryController.getInstance().getView()::requestFocusInWindow);
     }
 
     public void switchToMainMenu(){
         layout.show(cardPanel, "mainMenu");
+        SwingUtilities.invokeLater(MainMenuController.getInstance().getView()::requestFocusInWindow);
     }
 
     public void switchToLevelSelectMenu(){
         layout.show(cardPanel, "levelSelectMenu");
+        SwingUtilities.invokeLater(LevelSelectMenuController.getInstance().getView()::requestFocusInWindow);
     }
 
     public void switchToGameController(){
         layout.show(cardPanel, "game");
+        SwingUtilities.invokeLater(GameController.getInstance().getView()::requestFocusInWindow);
     }
 
     public void switchToUserSystem(){
         userSystemController.init();
         layout.show(cardPanel, "userSystem");
+        SwingUtilities.invokeLater(UserSystemController.getInstance().getView()::requestFocusInWindow);
     }
 
     public void handleWindowClosing(){

@@ -25,44 +25,48 @@ public class AutoSolver extends SwingWorker<ArrayList<Map>, Void> {
         MapStateNode currNode;
         int cnt = 0;
 
-        while (bfsList.get(cnt) != null) {
-            currNode = bfsList.get(cnt);
-            currMap = currNode.getMap();
-            HashSet<Integer> visited = new HashSet<>();
-            Map newMap;
+        try {
+            while (bfsList.get(cnt) != null) {
+                currNode = bfsList.get(cnt);
+                currMap = currNode.getMap();
+                HashSet<Integer> visited = new HashSet<>();
 
-            // check if victory has been reached
-            if (Map.checkVictory(currMap)) {
-                int totSteps = bfsList.get(cnt).getDepth() + 1;
+                // check if victory has been reached
+                if (Map.checkVictory(currMap)) {
+                    int totSteps = bfsList.get(cnt).getDepth() + 1;
 
-                ArrayList<Map> ansList = new ArrayList<>(totSteps);
+                    ArrayList<Map> ansList = new ArrayList<>(totSteps);
 
-                for (int next = cnt; next != -1; next = bfsList.get(next).getFather()) {
-                    ansList.set(bfsList.get(next).getDepth(), bfsList.get(next).getMap());
+                    for (int next = cnt; next != -1; next = bfsList.get(next).getFather()) {
+                        ansList.set(bfsList.get(next).getDepth(), bfsList.get(next).getMap());
+                    }
+
+                    return ansList;
                 }
 
-                return ansList;
-            }
-
-            // add new nodes to the queue
-            for (Direction dir : DIRECTIONS) {
-                if (Map.checkMove(currMap, dir)) {
-                    newMap = Map.doMove(currMap, dir);
-                    if (visited.add(newMap.hashCode())) {
-                        bfsList.add(new MapStateNode(newMap, currNode.getDepth()+1, cnt));
+                // add new nodes to the queue
+                for (Direction dir : DIRECTIONS) {
+                    if (Map.checkMove(currMap, dir)) {
+                        Map newMap = Map.doMove(currMap, dir);
+                        if (visited.add(newMap.hashCode())) {
+                            // System.out.println(newMap.hashCode());
+                            bfsList.add(new MapStateNode(newMap, currNode.getDepth() + 1, cnt));
+                        }
                     }
                 }
-            }
 
-            cnt++;
+                cnt++;
+            }
+        } catch (IndexOutOfBoundsException e) {
+            throw new AnswerNotFoundException();
         }
 
-        throw new AnswerNotFoundException();
+        return null;
     }
-    
+
     @Override
     protected ArrayList<Map> doInBackground() throws Exception {
-        try{
+        try {
             return solve();
         } catch (AnswerNotFoundException e) {
             return null;
@@ -73,8 +77,8 @@ public class AutoSolver extends SwingWorker<ArrayList<Map>, Void> {
     protected void done() {
         try {
             Map.produceHint(get());
-        } catch (InterruptedException|ExecutionException e) {
-            System.out.println("Error in AutoSolver: "+e.getMessage());
+        } catch (InterruptedException | ExecutionException e) {
+            System.out.println("Error in AutoSolver: " + e.getMessage());
         }
     }
 }

@@ -46,7 +46,7 @@ public class MapPanel extends JLayeredPane {
         this.add(dynamicLayer, 0);
     }
 
-    public void initPanel(Map map){
+    public void initPanel(Map map) {
         this.col = map.getWidth();
         this.row = map.getHeight();
         this.startCol = (MAX_COL - col) / 2;
@@ -63,20 +63,20 @@ public class MapPanel extends JLayeredPane {
         public StaticLayer() {
             this.setLocation(BASE_POINT);
             this.setSize(new Dimension(585, 495));
-            this.setBackground(new Color(0,0,0,100));
+            this.setBackground(new Color(0, 0, 0, 100));
             this.setLayout(new GridBagLayout());
         }
-    
-        public void initLayer(Map map){
+
+        public void initLayer(Map map) {
             this.removeAll();
-            
+
             var layoutConstraints = new GridBagConstraints();
 
             // init out of map comps
             for (int i = 0; i < MAX_ROW + 2; i++) {
                 for (int j = 0; j < MAX_COL + 2; j++) {
-                    if (i >= startRow+1 && i <= startRow + row ) {
-                        if (j >= startCol+1 && j <= startCol + col ) {
+                    if (i >= startRow + 1 && i <= startRow + row) {
+                        if (j >= startCol + 1 && j <= startCol + col) {
                             continue;
                         }
                     }
@@ -93,11 +93,11 @@ public class MapPanel extends JLayeredPane {
             // init map comps
             JPanel mainMap = new JPanel(new GridLayout(row, col));
             mainMap.setBounds(0, 0, GRID_SIZE * col, GRID_SIZE * row);
-            mainMap.setBackground(new Color(156,169,169));
+            mainMap.setBackground(new Color(156, 169, 169));
 
             for (int i = 0; i < row; i++) {
                 for (int j = 0; j < col; j++) {
-                    mainMap.add(map.getComp(j, i,2));
+                    mainMap.add(map.getComp(j, i, 2));
                 }
             }
 
@@ -128,23 +128,25 @@ public class MapPanel extends JLayeredPane {
             this.setOpaque(false);
         }
 
-        public void initLayer(Map map){
+        public void initLayer(Map map) {
             this.removeAll();
-            crates.clear();
+            if (crates != null) {
+                crates.clear();
+            }
 
-            player=new Player(1+map.getPlayerPosX()+startCol, 1+map.getPlayerPosX()+startRow);
-            crates=new ArrayList<>();
+            player = new Player(1 + map.getPlayerPosX() + startCol, 1 + map.getPlayerPosX() + startRow);
+            crates = new ArrayList<>();
 
             this.add(player);
-            var tempMap=map.getMapComponentsMatrix();
-            for(int i=1;i<row-1;i++){
-                for(int j=1;j<col-1;j++){
-                    if(tempMap[i][j]==MapComponents.BOX||tempMap[i][j]==MapComponents.BOX_ON_TARGET){
-                        crates.add(new Crate(startCol+j+1, startRow+i+1));
+            var tempMap = map.getMapComponentsMatrix();
+            for (int i = 1; i < row - 1; i++) {
+                for (int j = 1; j < col - 1; j++) {
+                    if (tempMap[i][j] == MapComponents.BOX || tempMap[i][j] == MapComponents.BOX_ON_TARGET) {
+                        crates.add(new Crate(startCol + j + 1, startRow + i + 1));
                     }
                 }
             }
-            for(var crate: crates){
+            for (var crate : crates) {
                 this.add(crate);
             }
 
@@ -152,12 +154,18 @@ public class MapPanel extends JLayeredPane {
             this.repaint();
         }
 
-        protected void doMove(Direction dir){
-            for(var crate : crates){
-                if(crate.getCurrCol()==player.getCurrCol()+dir.getCol()&&
-                    crate.getCurrRow()==player.getCurrRow()+dir.getRow()){
+        protected void showVictory(){
+            for(var crate: crates){
+                crate.showVictory();
+            }
+        }
+
+        protected void doMove(Direction dir) {
+            for (var crate : crates) {
+                if (crate.getCurrCol() == player.getCurrCol() + dir.getCol() &&
+                        crate.getCurrRow() == player.getCurrRow() + dir.getRow()) {
                     crate.move(dir);
-                }else{
+                } else {
                     crate.move(null);
                 }
             }
@@ -165,15 +173,15 @@ public class MapPanel extends JLayeredPane {
             player.move(dir);
         }
 
-        protected void doRewind(){
-            for(var crate:crates){
+        protected void doRewind() {
+            for (var crate : crates) {
                 crate.rewind();
             }
 
             player.rewind();
         }
 
-        protected void move_failed(Direction dir){
+        protected void move_failed(Direction dir) {
             player.move_failed(dir);
         }
     }
@@ -181,10 +189,12 @@ public class MapPanel extends JLayeredPane {
     private static OutOfMapWalls[][] readInitialMap() {
         OutOfMapWalls[][] result = new OutOfMapWalls[MAX_ROW + 2][MAX_COL + 2];
 
-        String dir = "E:\\workSpace\\files\\java\\Sokoban\\src\\main\\resources\\maps\\blankLevel.txt";
-
         try {
-            InputStream inp = new FileInputStream(dir);
+            String dir = "/maps/blankLevel.txt";
+            InputStream inp = MapPanel.class.getResourceAsStream(dir);
+            if (inp == null) {
+                throw new FileNotFoundException("Resource not found: " + dir);
+            }
             // read the map
             try (Scanner sc = new Scanner(inp)) {
                 // read the map
@@ -204,15 +214,19 @@ public class MapPanel extends JLayeredPane {
         return result;
     }
 
-    public void doMove(Direction dir){
+    public void showVictory(){
+        this.dynamicLayer.showVictory();
+    }
+
+    public void doMove(Direction dir) {
         dynamicLayer.doMove(dir);
     }
 
-    public void doRewind(){
+    public void doRewind() {
         dynamicLayer.doRewind();
     }
 
-    public void doMoveFail(Direction dir){
+    public void doMoveFail(Direction dir) {
         dynamicLayer.move_failed(dir);
     }
 }

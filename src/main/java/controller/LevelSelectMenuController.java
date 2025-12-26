@@ -10,7 +10,12 @@ public class LevelSelectMenuController {
     private final LevelSelectMenuPanel view= new LevelSelectMenuPanel();
 
     private LevelSelectMenuController() {
-        
+        System.out.println("select:");
+    }
+
+    public void select(int levelNum){
+        AppController.getInstance().initGame(levelNum);
+        AppController.getInstance().switchToGameController();
     }
 
     public JPanel getView() {

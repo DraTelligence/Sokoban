@@ -1,9 +1,12 @@
 package view.panels;
 
 import java.awt.CardLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JPanel;
 
+import controller.AppController;
 import view.userSystem.LogInPanel;
 import view.userSystem.UserProfilePanel;
 
@@ -13,6 +16,10 @@ public class UserSystemPanel extends JPanel{
     final private static LogInPanel logInPanel=new LogInPanel();
 
     static CardLayout layout=new CardLayout();
+
+    public void updatePanel(){
+        profilePanel.update();
+    }
 
     public static UserSystemPanel getInstance() {
         if (instance == null) {
@@ -26,6 +33,15 @@ public class UserSystemPanel extends JPanel{
 
         this.add(profilePanel,"profile");
         this.add(logInPanel,"logIn");
+
+        this.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_ESCAPE -> AppController.getInstance().switchToMainMenu();
+                }
+            }
+        });
     }
 
     public void switchPanel(String panel){

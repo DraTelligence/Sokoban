@@ -18,10 +18,6 @@ public class MainMenuController {
         });
     }
 
-    void initPanel(){
-        view.setVisible(true);
-    }
-
     public MainMenuPanel getView() {
         return view;
     }
@@ -38,6 +34,7 @@ public class MainMenuController {
             case"start"->AppController.getInstance().switchToLevelSelectMenu();
             case"exit"->AppController.getInstance().exitProgram();
             case"user"->AppController.getInstance().switchToUserSystem();
+            // case""
         }
     }
 }

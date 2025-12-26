@@ -3,8 +3,6 @@ package view.userSystem;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -84,16 +82,6 @@ public class LogInPanel extends JLayeredPane {
         userSystemPanel.add(logInBtn);
         userSystemPanel.add(signUpBtn);
 
-        this.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_ENTER -> logInBtn.doClick();
-                    case KeyEvent.VK_ESCAPE -> AppController.getInstance().switchToMainMenu();
-                }
-            }
-        });
-
         signUpBtn.addActionListener((ActionEvent e) -> {
             try {
                 UserSystemController.getInstance().signUp(username.getText(), password.getText());
@@ -109,6 +97,7 @@ public class LogInPanel extends JLayeredPane {
             try {
                 UserSystemController.getInstance().logIn(username.getText(), password.getText());
                 new ContentDialog("Log in successfully!").setVisible(true);
+                AppController.getInstance().switchToMainMenu();
             } catch (UserNotFoundException ex) {
                 new ContentDialog("No such user!").setVisible(true);
             } catch (PswdIncorrectException ex) {

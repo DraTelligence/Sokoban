@@ -2,6 +2,8 @@ package view.panels;
 
 import java.awt.AWTEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JLayeredPane;
 
@@ -26,6 +28,35 @@ public class GameMainPanel extends JLayeredPane {
 
         step=0;
 
+        this.addMouseListener(new MouseListener(){
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                buttonPanel.handleMouseEvent(e);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                buttonPanel.handleMouseEvent(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                buttonPanel.handleMouseEvent(e);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                buttonPanel.handleMouseEvent(e);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                buttonPanel.handleMouseEvent(e);
+            }
+            
+        });
+
         this.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(java.awt.event.KeyEvent e) {
@@ -42,7 +73,10 @@ public class GameMainPanel extends JLayeredPane {
             }
         });
         this.enableEvents(AWTEvent.KEY_EVENT_MASK);
+        this.enableEvents(AWTEvent.MOUSE_EVENT_MASK);
         this.setFocusable(true);
+
+
 
         // initialize components
         // MapPanel map =new MapPanel();
@@ -91,12 +125,12 @@ public class GameMainPanel extends JLayeredPane {
         this.mapPanel.repaint();
     }
 
-    public void showVictory(){
-        System.out.println(",,,");
-    }
-
     public void doMoveFail(Direction dir) {
         mapPanel.doMoveFail(dir);
+    }
+
+    public void showVictory(){
+        this.mapPanel.showVictory();
     }
 
     public void showLoading(){

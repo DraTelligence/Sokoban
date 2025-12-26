@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Area;
 
 import javax.swing.JButton;
@@ -13,19 +14,18 @@ import javax.swing.JButton;
 import controller.GameController;
 import view.game.buttonPanel.buttonState.ButtonState;
 
-public class AreaButton extends JButton{
+public class AreaButton extends JButton {
     private final String command;
     private Area buttonArea;
     private ButtonState buttonState;
     private int keyModifier;
     private int keyCode;
 
-    protected AreaButton(String command, ButtonState buttonState){
+    protected AreaButton(String command, ButtonState buttonState) {
         this.command = command;
         this.setText(command);
-        this.addMouseListener(new mouseAdapter());
 
-        this.setBounds(0,0,555,785);
+        this.setBounds(0, 0, 555, 785);
         this.setContentAreaFilled(false);
         this.setBorderPainted(false);
         this.setOpaque(false);
@@ -36,43 +36,35 @@ public class AreaButton extends JButton{
         this.buttonState = buttonState;
     }
 
-    protected final void setKeyModifier(int keyModifier){
+    protected final void setKeyModifier(int keyModifier) {
         this.keyModifier = keyModifier;
     }
 
-    protected final void setKeyCode(int keyCode){
+    protected final void setKeyCode(int keyCode) {
         this.keyCode = keyCode;
     }
 
-    private class mouseAdapter extends java.awt.event.MouseAdapter{
-        @Override
-        public void mouseEntered(java.awt.event.MouseEvent e){
-            buttonState = buttonState.getEnteredState();
-            repaint();
-        }
-
-        @Override
-        public void mouseExited(java.awt.event.MouseEvent e){
+    public void handleMouseEvent(MouseEvent e) {
+        if (contains(e.getPoint())) {
+            if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+                buttonState = buttonState.getPressedState();
+                GameController.getInstance().handleCommand(command);
+                repaint();
+            } else if (e.getID() == MouseEvent.MOUSE_RELEASED) {
+                buttonState = buttonState.getEnteredState();
+                repaint();
+            } else if (e.getID() == MouseEvent.MOUSE_MOVED) {
+                buttonState = buttonState.getEnteredState();
+                repaint();
+            }
+        } else {
             buttonState = buttonState.getNormalState();
-            repaint();
-        }
-
-        @Override
-        public void mousePressed(java.awt.event.MouseEvent e){
-            buttonState = buttonState.getPressedState();
-            GameController.getInstance().handleCommand(command);
-            repaint();
-        }
-
-        @Override
-        public void mouseReleased(java.awt.event.MouseEvent e){
-            buttonState = buttonState.getEnteredState();
             repaint();
         }
     }
 
     public void handleKeyEvent(KeyEvent e) {
-        if(e.getKeyCode() == keyCode && e.getModifiersEx() == keyModifier){
+        if (e.getKeyCode() == keyCode && e.getModifiersEx() == keyModifier) {
             if (e.getID() == KeyEvent.KEY_PRESSED) {
                 buttonState = buttonState.getPressedState();
                 GameController.getInstance().handleCommand(command);
@@ -84,7 +76,7 @@ public class AreaButton extends JButton{
         }
     }
 
-    public final void setButtonArea(Area buttonArea){
+    public final void setButtonArea(Area buttonArea) {
         this.buttonArea = buttonArea;
     }
 
@@ -112,7 +104,7 @@ public class AreaButton extends JButton{
     }
 
     @Override
-    public final boolean contains(Point p){
+    public final boolean contains(Point p) {
         return buttonArea.contains(p);
     }
 }

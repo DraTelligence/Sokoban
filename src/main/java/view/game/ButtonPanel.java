@@ -1,6 +1,7 @@
 package view.game;
 
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.JLayeredPane;
@@ -38,6 +39,12 @@ public class ButtonPanel extends JLayeredPane{
         }
 
         this.setVisible(true);
+    }
+
+    public void handleMouseEvent(MouseEvent e){
+        for(var bt:buttons){
+            bt.handleMouseEvent(e);
+        }
     }
 
     public ArrayList<AreaButton> getButtons() {

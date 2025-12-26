@@ -1,7 +1,14 @@
 package controller;
 
+import java.awt.event.ActionEvent;
+
+import javax.security.auth.login.AppConfigurationEntry;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+
 import model.game.Direction;
 import model.game.Map;
+import view.app.ContentDialog;
 import view.panels.GameMainPanel;
 
 /**
@@ -48,6 +55,19 @@ public class GameController {
             case "getHint" -> this.model.showHint();
             case "doRewind" -> this.model.undoMove();
         }
+    }
+
+    public void showVictory(){
+        view.showVictory();
+        Timer timer=new Timer(2000,(ActionEvent e)->{
+            new ContentDialog("win!").setVisible(true);
+            AppController.getInstance().switchToMainMenu();
+        });
+        timer.setRepeats(false);
+        timer.start();
+        //UserSystemController.getInstance().setStageInfo(stageID, steps, time);
+        
+
     }
 
     /**

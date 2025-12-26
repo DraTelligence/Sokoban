@@ -53,7 +53,7 @@ public class User implements Serializable {
     public static User deserializeWithHash(ObjectInputStream ois, String password)
             throws IOException, ClassNotFoundException, NoSuchAlgorithmException, SecurityException {
         // Deserialize the object
-        User user = (model.user.User) ois.readObject();
+        User user = (User) ois.readObject();
 
         // Read the stored hash
         byte[] storedHash = (byte[]) ois.readObject();
