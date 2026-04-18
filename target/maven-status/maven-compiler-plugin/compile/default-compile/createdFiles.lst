@@ -6,7 +6,6 @@ view\animations\Focus.class
 view\game\buttonPanel\AreaButton.class
 view\game\MapPanel.class
 view\game\mapPnaleComp\DynamicMapComponent.class
-view\userSystem\LogInPanel$1.class
 view\game\informationPanel\InformationPanelBody.class
 view\app\ContentDialog.class
 view\app\ClosingDialog.class
@@ -32,7 +31,6 @@ model\exceptions\PswdIncorrectException.class
 controller\MainMenuController.class
 model\exceptions\UserNotFoundException.class
 model\game\MapComponents.class
-view\game\buttonPanel\AreaButton$mouseAdapter.class
 model\user\Save$StageInfo.class
 App.class
 model\game\AnswerNotFoundException.class

@@ -27,7 +27,6 @@ public class UserSystem {
 
     /**
      * Produce the path of saves
-     * C://...//%user%//AppData//Roaming//ThereIsA_Studio//Sokoban//saves
      *
      * @return The path of the dir where saves are stored
      */

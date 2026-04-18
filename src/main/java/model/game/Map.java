@@ -57,8 +57,8 @@ public class Map implements Serializable {
     }
 
     @Override
-    public Map clone(){
-        return new Map(this.getMapComponentsMatrix(),this.getPlayerPosX(),this.getPlayerPosY());
+    public Map clone() {
+        return new Map(this.getMapComponentsMatrix(), this.getPlayerPosX(), this.getPlayerPosY());
     }
 
     /**
@@ -166,7 +166,7 @@ public class Map implements Serializable {
             return false;
         Map other = (Map) obj;
 
-        return Arrays.deepEquals(map, other.map) || posX != other.posX || posY != other.posY;
+        return Arrays.deepEquals(map, other.map) && posX == other.posX && posY == other.posY;
     }
 
     /**
